@@ -19,7 +19,7 @@ Installed Android SDK Platform Tools (selected by `tag`):
 
 
 ## .NET Core
-Using dotnet-sdk-3.1 from https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb
+Using dotnet-sdk-6.0 from https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb
 
 ## Mono
 Using `preview-focal` repo from mono-project.com
@@ -40,7 +40,7 @@ stages:
   - build
 
 build-android:
-  image: tafilz/xamarin-android:29
+  image: rheuvel/xamarin-android:29
   stage: build
   only:
     - master
