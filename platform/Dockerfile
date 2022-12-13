@@ -5,10 +5,10 @@ LABEL maintainer="Ruurd Heuvel <rheuvel89@gmail.com>"
 ENV TZ=Europe/Amsterdam
 
 # Get command line tools version from here: https://developer.android.com/studio
-ENV SDK_CMD_TOOLS=6858069
+ENV SDK_CMD_TOOLS=9123335
 # Get BUILD ID from here: https://dev.azure.com/xamarin/public/_build?definitionId=48&_a=summary
 # Click on the desired commit and extract the buildId from the url
-ENV XAMARIN_OSS_BUILD_ID=34843
+ENV XAMARIN_OSS_BUILD_ID=54953
 
 RUN apt-get update && apt-get install -y \
     curl \
@@ -25,7 +25,7 @@ RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E03280
     echo "deb https://download.mono-project.com/repo/ubuntu stable-focal main" | tee /etc/apt/sources.list.d/mono-official-stable.list && \
     apt-get update && apt-get install -y \
     mono-complete \
-    dotnet-sdk-5.0 \
+    dotnet-sdk-6.0 \
     nuget \
     && rm -rf /var/lib/apt/lists/*
 
@@ -43,14 +43,14 @@ RUN mkdir /usr/lib/xamarin.android && \
     mkdir /usr/lib/mono/xbuild/Xamarin/ && \
     mkdir /xamarin && \
     mkdir /tmp/xamarin-linux/ && \
-    mkdir /tmp/xamarin-linux/Installers - Linux/
+    mkdir /tmp/xamarin-linux/installers-unsigned - Linux/
 
-RUN curl -k "https://dev.azure.com/xamarin/public/_apis/build/builds/$XAMARIN_OSS_BUILD_ID/artifacts?artifactName=Installers%20-%20Linux&api-version=7.0" | curl -L $(jq -r '.resource.downloadUrl') -o xamarin-linux.zip
+RUN curl -k "https://dev.azure.com/xamarin/public/_apis/build/builds/$XAMARIN_OSS_BUILD_ID/artifacts?artifactName=installers-unsigned%20-%20Linux&api-version=7.0" | curl -L $(jq -r '.resource.downloadUrl') -o xamarin-linux.zip
 RUN unzip -q xamarin-linux.zip -d /tmp/xamarin-linux
 RUN rm xamarin-linux.zip
-RUN cd "/tmp/xamarin-linux/Installers - Linux/"
+RUN cd "/tmp/xamarin-linux/installers-unsigned - Linux/"
 #RUN tar xjf ./xamarin.android-oss-v*.tar.bz2 --strip 1 -C /xamarin
-RUN tar xjf "/tmp/xamarin-linux/Installers - Linux/xamarin.android-oss-v11.2.99.0_Linux-x86_64_master_05bb8e0e-Release.tar.bz2" --strip 1 -C /xamarin
+RUN tar xjf "/tmp/xamarin-linux/installers-unsigned - Linux/xamarin.android-oss-v12.2.99.0_Linux-x86_64_main_51320b7b-Release.tar.bz2" --strip 1 -C /xamarin
 RUN cp -a /xamarin/bin/Release/lib/xamarin.android/. /usr/lib/xamarin.android/
 RUN rm -rf /usr/lib/mono/xbuild/Xamarin/Android && \
     rm -rf /usr/lib/mono/xbuild-frameworks/MonoAndroid && \
@@ -63,10 +63,10 @@ ENV PATH=/xamarin/bin/Release/bin:$PATH
 
 # JAVA
 RUN apt-get update && apt-get install -y \
-    openjdk-8-jdk-headless \
+    openjdk-11-jdk-headless \
     && rm -rf /var/lib/apt/lists/*
 
-ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/
+ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64/
 
 # Android SDK
 RUN apt-get update && apt-get install -y \
